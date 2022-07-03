@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">On My Plate</string>
+
+    <string name="main_list_heading">Your Plate</string>
+    <string name="create_new_task">Create new task</string>
+    <string name="task_name">Task name</string>
+    <string name="task_description">Task description</string>
+    <string name="due_asap">Is this task due as soon as possible?</string>
+    <string name="due_date">Due date</string>
+</resources>
