@@ -1,4 +1,4 @@
-package com.personal.onmyplate.ui.screens
+package com.personal.onmyplate.ui.screens.addTask
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -22,12 +21,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.personal.onmyplate.R
-import com.personal.onmyplate.ui.screens.addTask.AddTaskAction
-import com.personal.onmyplate.ui.screens.addTask.AddTaskNavigation
-import com.personal.onmyplate.ui.screens.addTask.AddTaskViewModel
 import com.personal.onmyplate.ui.theme.AppTheme
 import com.personal.onmyplate.utils.getActivity
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -134,20 +131,21 @@ fun AddTaskScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    TextField(
-                        value = viewState.dueDateText,
-                        label = {
-                            Text(text = stringResource(id = R.string.due_date))
-                        },
-                        onValueChange = {},
-                        readOnly = true,
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-
+                    Box(modifier = Modifier.fillMaxWidth().clickable {
+                        viewModel.onAction(AddTaskAction.DueDateClicked)
+                    }) {
+                        TextField(
+                            value = viewState.dueDateText,
+                            label = {
+                                Text(text = stringResource(id = R.string.due_date))
                             },
-                    )
+                            onValueChange = {},
+                            readOnly = true,
+                            enabled = false,
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
@@ -156,12 +154,16 @@ fun AddTaskScreen(navController: NavController) {
 
 @Composable
 private fun NavigationComposable(viewModel: AddTaskViewModel) {
-    val navigation by viewModel.navigationChannel.consumeAsFlow().collectAsState(initial = AddTaskNavigation.DoNothing)
+    val navigation by viewModel.navigationChannel.receiveAsFlow()
+        .collectAsState(initial = AddTaskNavigation.DoNothing)
 
     when (navigation) {
         is AddTaskNavigation.DisplayDatePicker -> {
             val picker = MaterialDatePicker.Builder.datePicker().build()
-            picker.show(LocalContext.current.getActivity()!!.supportFragmentManager, picker.toString())
+            picker.show(
+                LocalContext.current.getActivity()!!.supportFragmentManager,
+                picker.toString()
+            )
             picker.addOnPositiveButtonClickListener { dateMillis ->
                 viewModel.onAction(AddTaskAction.DueDateUpdated(dateMillis))
             }

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.OnMyPlate" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.OnMyPlate" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="materialCalendarTheme">@style/ThemeOverlay.Material3.MaterialCalendar</item>
+        <item name="colorSurface">#FEFBFF</item>
+    </style>
 </resources>

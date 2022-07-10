@@ -1,4 +1,4 @@
-package com.personal.onmyplate.ui.screens
+package com.personal.onmyplate.ui.screens.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
@@ -26,11 +26,7 @@ fun MainScreen(navController: NavController) {
                                 text = stringResource(id = R.string.main_list_heading),
                                 style = MaterialTheme.typography.titleMedium
                             )
-                        },
-//                        colors = TopAppBarDefaults.smallTopAppBarColors(
-//                            containerColor = MaterialTheme.colorScheme.background,
-//                            titleContentColor = MaterialTheme.colorScheme.onBackground
-//                        )
+                        }
                     )
                 },
                 floatingActionButton = {

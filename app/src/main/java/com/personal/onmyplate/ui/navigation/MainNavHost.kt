@@ -7,11 +7,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.personal.onmyplate.ui.screens.AddTaskScreen
-import com.personal.onmyplate.ui.screens.MainScreen
+import com.personal.onmyplate.ui.screens.addTask.AddTaskScreen
+import com.personal.onmyplate.ui.screens.main.MainScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
