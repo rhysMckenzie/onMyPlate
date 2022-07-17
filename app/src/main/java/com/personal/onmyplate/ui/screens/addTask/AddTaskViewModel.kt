@@ -8,6 +8,12 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,7 +46,7 @@ class AddTaskViewModel @Inject constructor() : ViewModel() {
                 navigationChannel.send(AddTaskNavigation.DisplayDatePicker)
                 emit(AddTaskResult.DateClicked)
             }
-            is AddTaskAction.DueDateUpdated -> TODO()
+            is AddTaskAction.DueDateUpdated -> dueDateUpdated(action.dateInMillis)
         }
     }
 
@@ -59,6 +65,14 @@ class AddTaskViewModel @Inject constructor() : ViewModel() {
         emit(AddTaskResult.IsDueAsapUpdated(isChecked))
     }
 
+    private fun dueDateUpdated(dateInMillis: Long): Flow<AddTaskResult> = flow {
+        val formatter = DateTimeFormatter.ofPattern("EEE dd MMMM hh:mm a", Locale.ENGLISH)
+        val date = OffsetDateTime.ofInstant(Instant.ofEpochMilli(dateInMillis), ZoneId.systemDefault())
+        val dateText = formatter.format(date)
+        task.dueDate = date
+        emit(AddTaskResult.DueDateUpdated(dateText))
+    }
+
     private fun reducer(state: AddTaskViewState, result: AddTaskResult): AddTaskViewState {
         when (result) {
             is AddTaskResult.TaskNameUpdated -> state.apply {
@@ -71,6 +85,9 @@ class AddTaskViewModel @Inject constructor() : ViewModel() {
                 this.isDueAsap = result.isDueAsap
             }
             is AddTaskResult.DateClicked -> {}
+            is AddTaskResult.DueDateUpdated -> state.apply {
+                this.dueDateText = result.dateText
+            }
         }
         return _state
     }
@@ -78,6 +95,12 @@ class AddTaskViewModel @Inject constructor() : ViewModel() {
     fun onAction(action: AddTaskAction) {
         viewModelScope.launch {
             intentChannel.send(action)
+        }
+    }
+
+    fun resetNavigation() {
+        viewModelScope.launch {
+            navigationChannel.send(AddTaskNavigation.DoNothing)
         }
     }
 }

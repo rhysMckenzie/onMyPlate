@@ -166,6 +166,16 @@ private fun NavigationComposable(viewModel: AddTaskViewModel) {
             )
             picker.addOnPositiveButtonClickListener { dateMillis ->
                 viewModel.onAction(AddTaskAction.DueDateUpdated(dateMillis))
+                viewModel.resetNavigation()
+            }
+            picker.addOnCancelListener {
+                viewModel.resetNavigation()
+            }
+            picker.addOnDismissListener {
+                viewModel.resetNavigation()
+            }
+            picker.addOnNegativeButtonClickListener {
+                viewModel.resetNavigation()
             }
         }
         AddTaskNavigation.DoNothing -> {
